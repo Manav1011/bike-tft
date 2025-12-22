@@ -1,58 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <meta name="theme-color" content="#040404" />
-    <meta name="description" content="Bike Dashboard PWA" />
-    <title>BikeDash</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              dash: {
-                bg: '#040404',       // Pure Black
-                panel: '#090808',    // Deep Black
-                card: '#232223',     // Charcoal
-                border: '#424143',   // Dark Gray
-                text: '#FCFCFC',     // Primary Text
-                sub: '#CACACA',      // Secondary Text
-                muted: '#868686',    // Muted Text
-                accent: '#DD6713',   // Accent Orange
-              }
-            },
-            fontFamily: {
-              mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', "Liberation Mono", "Courier New", 'monospace'],
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#040404" />
+  <meta name="description" content="Bike Dashboard PWA" />
+  <title>BikeDash - Pro Racer</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            dash: {
+              bg: '#020202',
+              panel: '#080808',
+              card: '#121212',
+              border: '#2A2A2A',
+              text: '#E0E0E0',
+              accent: '#FF4D00', // Neon Racing Orange
+              cyan: '#00F0FF',   // Neon Cyan
+              red: '#FF003C',    // Sport Red
             }
+          },
+          fontFamily: {
+            orbitron: ['Orbitron', 'sans-serif'],
+            rajdhani: ['Rajdhani', 'sans-serif'],
+            mono: ['ui-monospace', 'monospace'],
+          },
+          backgroundImage: {
+            'carbon': "url('https://www.transparenttextures.com/patterns/carbon-fibre.png')",
           }
         }
       }
-    </script>
-    <style>
-      body {
-        background-color: #040404;
-        color: #FCFCFC;
-        overflow: hidden; /* Prevent scrolling for dashboard feel */
-        touch-action: manipulation; /* Improve touch response */
+    }
+  </script>
+  <style>
+    body {
+      background-color: #020202;
+      color: #E0E0E0;
+      font-family: 'Rajdhani', sans-serif;
+      overflow: hidden;
+      touch-action: manipulation;
+      position: relative;
+    }
+
+    /* Scanning lines effect */
+    body::before {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+      z-index: 100;
+      background-size: 100% 4px, 3px 100%;
+      pointer-events: none;
+      opacity: 0.15;
+    }
+
+    /* Vignette */
+    body::after {
+      content: " ";
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      background: radial-gradient(circle, transparent 60%, black 150%);
+      z-index: 101;
+      pointer-events: none;
+    }
+
+    @keyframes blink {
+
+      0%,
+      100% {
+        opacity: 1;
       }
-      /* Hide scrollbar */
-      ::-webkit-scrollbar {
-        display: none;
+
+      50% {
+        opacity: 0;
       }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
-  }
-}
-</script>
+    }
+
+    .animate-blink {
+      animation: blink 0.5s infinite;
+    }
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+
 </html>

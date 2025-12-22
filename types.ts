@@ -26,3 +26,16 @@ export enum SpotifyAuthStatus {
   LOGGED_IN,
   EXPIRED
 }
+
+export interface RideSession {
+  startTime: number;
+  endTime?: number;
+  distance: number; // in km
+  maxSpeed: number; // in km/h
+  isActive: boolean;
+}
+
+export interface RideHistoryEntry extends RideSession {
+  id: string;
+  endTime: number;
+}
