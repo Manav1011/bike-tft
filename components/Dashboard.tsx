@@ -53,8 +53,8 @@ const Dashboard: React.FC = () => {
 
         const options = {
             enableHighAccuracy: true,
-            maximumAge: 1000,
-            timeout: 5000,
+            maximumAge: 5000, // Use cached position if less than 5s old
+            timeout: 15000,   // Wait up to 15s for fresh data
         };
 
         const watchId = navigator.geolocation.watchPosition(
