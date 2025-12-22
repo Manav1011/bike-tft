@@ -167,7 +167,7 @@ const SpotifyPlayer: React.FC = () => {
   const track = playerState?.item;
 
   return (
-    <div className="w-full bg-dash-panel bg-carbon landscape:h-full rounded-t-3xl landscape:rounded-t-none landscape:rounded-l-3xl border-t landscape:border-t-0 landscape:border-l border-dash-border p-5 flex flex-col justify-between h-[300px] relative overflow-hidden group">
+    <div className="w-full bg-dash-panel bg-carbon landscape:h-full rounded-t-3xl landscape:rounded-t-none landscape:rounded-l-3xl border-t landscape:border-t-0 landscape:border-l border-dash-border p-3 landscape:p-5 flex flex-col justify-between h-[220px] landscape:h-full relative overflow-hidden group">
       <div className="absolute inset-0 bg-dash-accent/5 pointer-events-none"></div>
 
       {/* Track Info */}
@@ -177,10 +177,10 @@ const SpotifyPlayer: React.FC = () => {
             <img
               src={track.album.images[0].url}
               alt="Album Art"
-              className="w-16 h-16 landscape:w-40 landscape:h-40 rounded-none border-2 border-dash-border shadow-[0_0_15px_rgba(0,0,0,0.5)] transform -skew-x-6"
+              className="w-12 h-12 landscape:w-40 landscape:h-40 rounded-none border-2 border-dash-border shadow-[0_0_15px_rgba(0,0,0,0.5)] transform -skew-x-6"
             />
           ) : (
-            <div className="w-16 h-16 landscape:w-40 landscape:h-40 bg-dash-card border-2 border-dash-border flex items-center justify-center transform -skew-x-6">
+            <div className="w-12 h-12 landscape:w-40 landscape:h-40 bg-dash-card border-2 border-dash-border flex items-center justify-center transform -skew-x-6">
               <MusicIcon />
             </div>
           )}
@@ -190,10 +190,10 @@ const SpotifyPlayer: React.FC = () => {
         </div>
 
         <div className="flex-1 overflow-hidden font-rajdhani">
-          <h3 className="text-dash-text text-xl font-black italic uppercase tracking-tighter truncate drop-shadow-md">
+          <h3 className="text-dash-text text-base landscape:text-xl font-black italic uppercase tracking-tighter truncate drop-shadow-md">
             {track?.name || 'SYSTEM_IDLE'}
           </h3>
-          <p className="text-dash-accent text-sm font-bold tracking-widest uppercase truncate animate-pulse">
+          <p className="text-dash-accent text-[10px] landscape:text-sm font-bold tracking-widest uppercase truncate animate-pulse">
             {track?.artists.map(a => a.name).join(', ') || 'READY_FOR_INPUT'}
           </p>
         </div>
@@ -213,7 +213,7 @@ const SpotifyPlayer: React.FC = () => {
       <div className="flex items-center justify-between px-2 z-10 mt-auto">
         <button
           onClick={() => handleAction(() => prevTrack(token!))}
-          className="w-16 h-16 flex items-center justify-center rounded-none bg-dash-card border-2 border-dash-border text-dash-text hover:text-dash-cyan transition-all transform -skew-x-12 active:scale-90"
+          className="w-12 h-12 landscape:w-16 landscape:h-16 flex items-center justify-center rounded-none bg-dash-card border-2 border-dash-border text-dash-text hover:text-dash-cyan transition-all transform -skew-x-12 active:scale-90"
           aria-label="Previous"
         >
           <PrevIcon />
@@ -221,7 +221,7 @@ const SpotifyPlayer: React.FC = () => {
 
         <button
           onClick={() => handleAction(() => togglePlay(token!, playerState?.isPlaying || false))}
-          className="w-20 h-20 flex items-center justify-center rounded-none bg-dash-accent text-white shadow-[0_0_20px_rgba(255,77,0,0.4)] transition-all transform -skew-x-12 active:scale-95 border-r-4 border-b-4 border-white/20"
+          className="w-14 h-14 landscape:w-20 landscape:h-20 flex items-center justify-center rounded-none bg-dash-accent text-white shadow-[0_0_20px_rgba(255,77,0,0.4)] transition-all transform -skew-x-12 active:scale-95 border-r-4 border-b-4 border-white/20"
           aria-label={playerState?.isPlaying ? "Pause" : "Play"}
         >
           {playerState?.isPlaying ? <PauseIcon /> : <PlayIcon />}
@@ -229,7 +229,7 @@ const SpotifyPlayer: React.FC = () => {
 
         <button
           onClick={() => handleAction(() => nextTrack(token!))}
-          className="w-16 h-16 flex items-center justify-center rounded-none bg-dash-card border-2 border-dash-border text-dash-text hover:text-dash-cyan transition-all transform -skew-x-12 active:scale-90"
+          className="w-12 h-12 landscape:w-16 landscape:h-16 flex items-center justify-center rounded-none bg-dash-card border-2 border-dash-border text-dash-text hover:text-dash-cyan transition-all transform -skew-x-12 active:scale-90"
           aria-label="Next"
         >
           <NextIcon />

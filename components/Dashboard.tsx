@@ -95,11 +95,11 @@ const Dashboard: React.FC = () => {
 
             {/* Left/Top Section: Telemetry & Time */}
             <div className="flex-none z-20 w-full landscape:w-[260px] landscape:h-full flex flex-col bg-dash-bg/60 landscape:bg-gradient-to-r landscape:from-black/80 landscape:to-transparent backdrop-blur-sm border-b landscape:border-b-0 landscape:border-r border-dash-border/10">
-                <div className="p-3 pt-6 flex flex-col gap-4">
+                <div className="p-2 landscape:p-3 landscape:pt-6 flex flex-col gap-2 landscape:gap-4">
                     <Clock />
 
-                    {/* Horizontal Divider Line */}
-                    <div className="w-full flex items-center gap-2 opacity-30">
+                    {/* Horizontal Divider Line - Hidden on small portrait */}
+                    <div className="hidden landscape:flex w-full items-center gap-2 opacity-30">
                         <div className="h-[1px] flex-1 bg-dash-border"></div>
                         <div className="w-1 h-1 bg-dash-cyan rotate-45"></div>
                         <div className="h-[1px] w-8 bg-dash-border"></div>
@@ -107,8 +107,8 @@ const Dashboard: React.FC = () => {
 
                     <RideStats currentSpeed={geoState.speed} currentCoords={currentCoords} />
 
-                    {/* Hidden Secondary Telemetry (Decorative for racer feel) */}
-                    <div className="px-3 py-2 flex justify-between font-orbitron text-[8px] text-dash-cyan/40 border-t border-dash-border/10 mt-2">
+                    {/* Hidden Secondary Telemetry (Decorative for racer feel) - Only in landscape */}
+                    <div className="hidden landscape:flex px-3 py-2 justify-between font-orbitron text-[8px] text-dash-cyan/40 border-t border-dash-border/10 mt-2">
                         <div className="flex flex-col">
                             <span>ALT: 422M</span>
                             <span>HDG: 284° NW</span>
@@ -122,21 +122,21 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Center Section: Main HUD (Speedometer) */}
-            <div className="flex-1 flex flex-col h-full overflow-hidden relative">
+            <div className="flex-1 flex flex-col min-h-0 overflow-hidden relative">
                 <main className="flex-1 flex flex-col justify-center items-center w-full z-0 overflow-hidden">
                     <Speedometer speed={geoState.speed} error={geoState.error} />
                 </main>
 
-                {/* Subtle HUD Warning */}
-                <div className="absolute top-2 w-full text-center pointer-events-none z-30 opacity-20">
-                    <p className="text-[8px] text-dash-muted uppercase tracking-[0.4em] font-orbitron">
+                {/* Subtle HUD Warning - Positioned higher in portrait */}
+                <div className="absolute top-2 landscape:top-2 w-full text-center pointer-events-none z-30 opacity-10">
+                    <p className="text-[7px] landscape:text-[8px] text-dash-muted uppercase tracking-[0.4em] font-orbitron">
                         Safe Operation Required
                     </p>
                 </div>
             </div>
 
             {/* Right/Bottom Section: Comms/Music */}
-            <div className="flex-none z-20 w-full landscape:w-[300px] landscape:h-full bg-dash-bg/60 landscape:bg-gradient-to-l landscape:from-black/80 landscape:to-transparent backdrop-blur-sm landscape:flex landscape:items-center">
+            <div className="flex-none z-20 w-full landscape:w-[300px] landscape:h-full bg-dash-bg/60 landscape:bg-gradient-to-l landscape:from-black/80 landscape:to-transparent backdrop-blur-sm flex items-center">
                 <SpotifyPlayer />
             </div>
         </div>
