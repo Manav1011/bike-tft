@@ -7,7 +7,26 @@ import { requestWakeLock } from '../services/wakeLockService';
 import { GeoState } from '../types';
 
 const Dashboard: React.FC = () => {
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
     const [wakeLock, setWakeLock] = useState<WakeLockSentinel | null>(null);
+
+    useEffect(() => {
+        const handler = (e: any) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handler);
+        return () => window.removeEventListener('beforeinstallprompt', handler);
+    }, []);
+
+    const handleInstall = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setDeferredPrompt(null);
+        }
+    };
     const [geoState, setGeoState] = useState<GeoState>({
         speed: null,
         accuracy: null,
@@ -126,6 +145,36 @@ const Dashboard: React.FC = () => {
                 <main className="flex-1 flex flex-col justify-center items-center w-full z-0 overflow-hidden">
                     <Speedometer speed={geoState.speed} error={geoState.error} />
                 </main>
+
+                {/* Fullscreen & Install Controls */}
+                <div className="absolute top-4 right-4 flex gap-2 z-40">
+                    {deferredPrompt && (
+                        <button
+                            onClick={handleInstall}
+                            className="flex items-center gap-2 px-3 py-2 bg-dash-cyan/20 border border-dash-cyan/40 text-dash-cyan text-[10px] font-black uppercase tracking-widest transform -skew-x-12 animate-pulse"
+                        >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            Install App
+                        </button>
+                    )}
+                    <button
+                        onClick={() => {
+                            if (!document.fullscreenElement) {
+                                document.documentElement.requestFullscreen().catch(e => console.error(e));
+                            } else {
+                                if (document.exitFullscreen) document.exitFullscreen();
+                            }
+                        }}
+                        className="p-2 bg-dash-bg/40 border border-dash-border/30 text-dash-cyan/60 hover:text-dash-cyan transition-all transform -skew-x-12 backdrop-blur-md"
+                        title="Toggle Fullscreen"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                        </svg>
+                    </button>
+                </div>
 
                 {/* Subtle HUD Warning - Positioned higher in portrait */}
                 <div className="absolute top-2 landscape:top-2 w-full text-center pointer-events-none z-30 opacity-10">

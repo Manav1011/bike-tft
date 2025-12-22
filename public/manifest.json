@@ -1,0 +1,25 @@
+{
+    "short_name": "BikeDash",
+    "name": "Bike Dashboard Pro",
+    "description": "Professional high-performance bike telemetry dashboard.",
+    "icons": [
+        {
+            "src": "/icon-192.png",
+            "type": "image/png",
+            "sizes": "192x192",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#020202",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#FF4D00",
+    "orientation": "any"
+}
