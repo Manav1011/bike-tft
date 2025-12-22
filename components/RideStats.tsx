@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RideSession, RideHistoryEntry } from '../types';
-import { calculateDistance, saveRideToHistory, formatDuration, getRideHistory, clearRideHistory } from '../services/rideService';
-import RideHistory from './RideHistory';
+import { calculateDistance, saveRideToHistory, formatDuration } from '../services/rideService';
 
 interface RideStatsProps {
     currentSpeed: number | null;
@@ -9,19 +9,10 @@ interface RideStatsProps {
 }
 
 const RideStats: React.FC<RideStatsProps> = ({ currentSpeed, currentCoords }) => {
+    const navigate = useNavigate();
     const [session, setSession] = useState<RideSession | null>(null);
     const [lastCoords, setLastCoords] = useState<{ lat: number; lon: number } | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [showHistory, setShowHistory] = useState(false);
-    const [history, setHistory] = useState<RideHistoryEntry[]>([]);
-
-    useEffect(() => {
-        const fetchHistory = async () => {
-            const data = await getRideHistory();
-            setHistory(data);
-        };
-        fetchHistory();
-    }, []);
 
     // Update timer
     useEffect(() => {
@@ -75,7 +66,6 @@ const RideStats: React.FC<RideStatsProps> = ({ currentSpeed, currentCoords }) =>
         });
         setElapsedTime(0);
         setLastCoords(null);
-        setShowHistory(false);
     };
 
     const endRide = async () => {
@@ -89,29 +79,12 @@ const RideStats: React.FC<RideStatsProps> = ({ currentSpeed, currentCoords }) =>
         };
 
         await saveRideToHistory(finalSession);
-        const updatedHistory = await getRideHistory();
-        setHistory(updatedHistory);
         setSession(null);
-        setShowHistory(true);
-    };
-
-    const handleClearHistory = async () => {
-        if (confirm("Purge all telemetry logs? This cannot be undone.")) {
-            await clearRideHistory();
-            setHistory([]);
-        }
+        navigate('/logs');
     };
 
     return (
         <div className="w-full flex flex-col gap-2 p-3 font-orbitron relative">
-            {showHistory && (
-                <RideHistory
-                    history={history}
-                    onClose={() => setShowHistory(false)}
-                    onClear={handleClearHistory}
-                />
-            )}
-
             {session?.isActive ? (
                 <div className="grid grid-cols-3 gap-2">
                     {/* Stats Boxes */}
@@ -144,7 +117,7 @@ const RideStats: React.FC<RideStatsProps> = ({ currentSpeed, currentCoords }) =>
                         Initialize Ride
                     </button>
                     <button
-                        onClick={() => setShowHistory(true)}
+                        onClick={() => navigate('/logs')}
                         className="w-full py-2 bg-black/40 hover:bg-white/10 text-dash-muted border border-dash-border text-[10px] uppercase font-bold tracking-widest transform -skew-x-12 transition-all"
                     >
                         View Logs
