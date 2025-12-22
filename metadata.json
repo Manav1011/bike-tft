@@ -1,0 +1,7 @@
+{
+  "name": "BikeDash PWA",
+  "description": "High-contrast, mobile-first bike dashboard with GPS speedometer, clock, and Spotify controls.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
