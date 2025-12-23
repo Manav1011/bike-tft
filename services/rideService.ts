@@ -70,6 +70,17 @@ export const clearRideHistory = async (): Promise<void> => {
     });
 };
 
+export const deleteRideById = async (id: string): Promise<void> => {
+    const db = await openDB();
+    const tx = db.transaction(STORE_NAME, 'readwrite');
+    const store = tx.objectStore(STORE_NAME);
+    store.delete(id);
+    return new Promise((resolve, reject) => {
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+    });
+};
+
 export const formatDuration = (ms: number): string => {
     const seconds = Math.floor((ms / 1000) % 60);
     const minutes = Math.floor((ms / (1000 * 60)) % 60);

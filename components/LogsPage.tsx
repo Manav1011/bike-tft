@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RideHistoryEntry } from '../types';
-import { getRideHistory, clearRideHistory, formatDuration } from '../services/rideService';
+import { getRideHistory, clearRideHistory, deleteRideById, formatDuration } from '../services/rideService';
 
 const LogsPage: React.FC = () => {
     const navigate = useNavigate();
     const [history, setHistory] = useState<RideHistoryEntry[]>([]);
 
+    const fetchHistory = async () => {
+        const data = await getRideHistory();
+        setHistory(data);
+    };
+
     useEffect(() => {
-        const fetchHistory = async () => {
-            const data = await getRideHistory();
-            setHistory(data);
-        };
         fetchHistory();
     }, []);
 
@@ -22,13 +23,20 @@ const LogsPage: React.FC = () => {
         }
     };
 
+    const handleDeleteLog = async (id: string) => {
+        if (confirm("Delete this telemetry record?")) {
+            await deleteRideById(id);
+            await fetchHistory();
+        }
+    };
+
     return (
-        <div className="min-h-screen w-full bg-dash-bg bg-carbon p-6 flex flex-col font-orbitron text-dash-text relative">
+        <div className="h-screen w-full bg-dash-bg bg-carbon p-6 flex flex-col font-orbitron text-dash-text relative overflow-hidden">
             {/* Background Vignette */}
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 pointer-events-none"></div>
 
             {/* Header */}
-            <div className="flex justify-between items-center mb-8 border-b-2 border-dash-cyan/20 pb-4 relative z-10">
+            <div className="flex-none flex justify-between items-center mb-8 border-b-2 border-dash-cyan/20 pb-4 relative z-10">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={() => navigate('/')}
@@ -54,10 +62,10 @@ const LogsPage: React.FC = () => {
                 )}
             </div>
 
-            {/* Grid of Logs */}
+            {/* Grid of Logs - Scrollable Area */}
             <div className="flex-1 overflow-y-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 pr-2 custom-scrollbar">
                 {history.length === 0 ? (
-                    <div className="col-span-full h-64 flex flex-col items-center justify-center opacity-30">
+                    <div className="col-span-full h-full flex flex-col items-center justify-center opacity-30">
                         <svg className="w-16 h-16 mb-4 text-dash-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
@@ -68,6 +76,17 @@ const LogsPage: React.FC = () => {
                         <div key={ride.id} className="bg-dash-panel border border-dash-border/40 p-5 transform -skew-x-2 relative group hover:border-dash-cyan/50 transition-all">
                             <div className="absolute top-0 left-0 w-1 h-full bg-dash-cyan/40 group-hover:bg-dash-cyan transition-all"></div>
 
+                            {/* Delete specific log button */}
+                            <button
+                                onClick={() => handleDeleteLog(ride.id)}
+                                className="absolute top-4 right-4 p-1.5 text-dash-muted hover:text-dash-red transition-all transform skew-x-2 opacity-0 group-hover:opacity-100"
+                                title="Delete Log"
+                            >
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+
                             <div className="flex justify-between items-start mb-4">
                                 <div className="flex flex-col">
                                     <span className="text-xs font-black text-dash-text uppercase">
@@ -77,7 +96,7 @@ const LogsPage: React.FC = () => {
                                         {new Date(ride.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                     </span>
                                 </div>
-                                <span className="text-xs text-dash-cyan font-black italic tracking-tighter">
+                                <span className="text-xs text-dash-cyan font-black italic tracking-tighter mr-6">
                                     LOG_ID: {ride.id.toUpperCase()}
                                 </span>
                             </div>
@@ -89,7 +108,7 @@ const LogsPage: React.FC = () => {
                                 </div>
                                 <div className="bg-black/30 p-3 border-l-2 border-dash-cyan">
                                     <div className="text-[9px] text-dash-muted uppercase tracking-widest mb-1">Mission Time</div>
-                                    <div className="text-xl font-black text-dash-text">{formatDuration(ride.endTime - ride.startTime)}</div>
+                                    <div className="text-xl font-black text-dash-text">{formatDuration(ride.endTime! - ride.startTime)}</div>
                                 </div>
                             </div>
 
@@ -108,8 +127,8 @@ const LogsPage: React.FC = () => {
                 )}
             </div>
 
-            {/* Decorative Technical Border */}
-            <div className="mt-8 text-center opacity-10 pointer-events-none">
+            {/* Decorative Technical Footer */}
+            <div className="flex-none mt-4 text-center opacity-10 pointer-events-none">
                 <p className="text-[10px] tracking-[1em] uppercase">--- End of Telemetry Stream ---</p>
             </div>
         </div>
